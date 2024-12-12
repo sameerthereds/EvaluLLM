@@ -2,16 +2,12 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import pickle
-import urllib.parse
 
-# Load or initialize a DataFrame to store results
-try:
-    results_df = pd.read_csv("ratings_results.csv")
-except FileNotFoundError:
-    results_df = pd.DataFrame(columns=["Name", "Pair_ID", "Output_A", "Output_B", "Winner", "Reason", "Timestamp"])
+
+
 
 # Load output pairs from pickle file
-with open("/home/sneupane/stressLLM/pairs.pickle", 'rb') as file1:
+with open("/home/sneupane/EvaluLLM/pairs.pickle", 'rb') as file1:
     output_pairs = pickle.load(file1)
 # print(output_pairs[0].keys())
 # keys=output_pairs[0].keys()
@@ -29,9 +25,9 @@ with open("/home/sneupane/stressLLM/pairs.pickle", 'rb') as file1:
 # output_pairs_df.to_csv("output_pairs_for_rating.csv", index=False)
 
 
-
+print(len(output_pairs))
 df = pd.DataFrame(output_pairs)
-
+print(len(df))
 # Melt the DataFrame to create rows for each output
 melted_df = df.melt(
     id_vars=["input_idx", "task_prompt","model_1", "model_2"],

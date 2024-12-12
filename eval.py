@@ -18,8 +18,9 @@ def generate_synthetic_outputs(input_data):
         for model in models:
             model_outputs=generate_model_output(model, task_prompt)
             if "content" in model_outputs:
-                print(model)
-                model_outputs=model_outputs["content"]
+                if isinstance(model_outputs,dict):
+                    # print(model,task_prompt,model_outputs)
+                    model_outputs=model_outputs["content"]
             outputs[model].append(model_outputs)
     return outputs
 
@@ -84,12 +85,25 @@ def calculate_leaderboard(evaluation_results,model_dict):
     leaderboard = sorted(win_count.items(), key=lambda x: x[1], reverse=True)
     return leaderboard
 
+import pandas as pd
 import os
 print("Current working directory:", os.getcwd())
-stressor_df=pd.read_csv("/home/sneupane/stressLLM/EvaluLLM/moods_stressor_data.csv")
-stressor_group_df=stressor_df.groupby(["mod_stressor_new","Location"],as_index=False)["user"].count().sort_values("user",ascending=False)
-test_data=stressor_group_df.head(3)
-tuple_list = list(zip(test_data['mod_stressor_new'], test_data['Location']))
+stressor_df=pd.read_csv("/home/sneupane/EvaluLLM/moods_all_stressors.csv")
+
+work_related=["approaching deadline","too much workload","unmet/upcoming obligation","unanticipated task","forced/uninteresting work","exceeding personal capacity",
+"workplace politics","job instability","meeting a client","multitasking at work","work meeting"]
+
+IPC_related=["unpleasant conversation","work related unpleasant conversation","interaction with coworkers","interpersonal conflict","conflict with a partner",
+             "conflict with friends","conflict with boss","argument"]
+# print(len(work_related),len(IPC_related))
+
+stressor_df=stressor_df.loc[stressor_df["mod_stressor_new"].isin(work_related + IPC_related)]
+stressor_df=stressor_df.loc[stressor_df["Location"]!="unknown"]
+stressor_df=stressor_df.loc[stressor_df["Location_abs"]!="others"]
+# stressor_group_df=stressor_df.groupby(["mod_stressor_new","Location"],as_index=False)["user"].count().sort_values("user",ascending=False)
+stressor_group_df=stressor_df.groupby(["mod_stressor_new","Location_abs"],as_index=False)["user"].count().sort_values("mod_stressor_new",ascending=True)
+test_data=stressor_group_df
+tuple_list = list(zip(test_data['mod_stressor_new'], test_data['Location_abs']))
 input_data = tuple_list
 
 outputs = generate_synthetic_outputs(input_data)

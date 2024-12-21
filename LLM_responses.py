@@ -12,6 +12,9 @@ from openai import OpenAI
 client_openai=  OpenAI(api_key="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",
 )
 
+torch.backends.cuda.enable_mem_efficient_sdp(False)
+torch.backends.cuda.enable_flash_sdp(False)
+
 claude_key="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"
 client_claude = anthropic.Anthropic(api_key=claude_key)
 

@@ -102,7 +102,7 @@ stressor_df=stressor_df.loc[stressor_df["Location"]!="unknown"]
 stressor_df=stressor_df.loc[stressor_df["Location_abs"]!="others"]
 # stressor_group_df=stressor_df.groupby(["mod_stressor_new","Location"],as_index=False)["user"].count().sort_values("user",ascending=False)
 stressor_group_df=stressor_df.groupby(["mod_stressor_new","Location_abs"],as_index=False)["user"].count().sort_values("mod_stressor_new",ascending=True)
-test_data=stressor_group_df
+test_data=stressor_group_df.head(1)
 tuple_list = list(zip(test_data['mod_stressor_new'], test_data['Location_abs']))
 input_data = tuple_list
 
@@ -123,12 +123,12 @@ leaderboard = calculate_leaderboard(results,model_dict={"aam":"openai","bam":"ll
 import pickle
 
 
-with open('outputs.pickle', 'wb') as handle:
-    pickle.dump(outputs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open('pairs.pickle', 'wb') as handle:
-    pickle.dump(pairs, handle, protocol=pickle.HIGHEST_PROTOCOL)
-with open('results.pickle', 'wb') as handle:
-    pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open('outputs.pickle', 'wb') as handle:
+#     pickle.dump(outputs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open('pairs.pickle', 'wb') as handle:
+#     pickle.dump(pairs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+# with open('results.pickle', 'wb') as handle:
+#     pickle.dump(results, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # print("\nEvaluation Results:")
 # for result in results:
